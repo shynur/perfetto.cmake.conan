@@ -3,7 +3,7 @@ SHELL := /bin/bash -O globstar
 .PHONY: conan
 conan:
 	rm -rf ~/.conan/data/Perfetto/*/shynur/dev
-	conan create . shynur/dev --profile conan-profile.ini
+	conan create --profile:build conan-profile.ini . shynur/dev
 	conan upload --parallel -c --force --all -r my Perfetto/\*@shynur/dev
 
 .PHONY: install
