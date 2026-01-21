@@ -6,3 +6,5 @@
 /install/
 
 CMakeUserPresets.json
+
+/perfetto/VERSION

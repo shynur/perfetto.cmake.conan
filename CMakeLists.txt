@@ -5,7 +5,7 @@ execute_process(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 execute_process(
-    COMMAND git describe --tags --abbrev=0
+    COMMAND if [ -f VERSION ]; then cat VERSION; else git describe --tags --abbrev=0; fi
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/perfetto
     OUTPUT_VARIABLE PERFETTO_GIT_TAG
     OUTPUT_STRIP_TRAILING_WHITESPACE

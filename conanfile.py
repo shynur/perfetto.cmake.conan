@@ -5,7 +5,7 @@ Use with Conan v1.x
 import os, sys, subprocess
 import conan, conan.tools.cmake, conan.tools.files
 
-class QuickJSConan(conan.ConanFile):
+class PerfettoConan(conan.ConanFile):
     print(f'RUNNING {__file__} @ {os.getcwd()}', file=sys.stderr)
 
     name = 'Perfetto'
@@ -21,10 +21,17 @@ class QuickJSConan(conan.ConanFile):
         'fPIC': True,
     }
 
-    def exports_sources(self):
-        return (
-            '.git/*', 'CMakeLists.txt', 'cmake/*', 'perfetto/*',
-        )
+    subprocess.run(
+        ['bash', '-c', "git describe --tags --abbrev=0 >VERSION"],
+        cwd='perfetto',
+        stdout=subprocess.PIPE,
+        text=True
+    )
+    exports_sources = (
+        'CMakeLists.txt',
+        'cmake/*',
+        'perfetto/*',
+    )
 
     def set_version(self):
         print(f'RUNNING {__file__} @ {os.getcwd()}, in set_version', file=sys.stderr)
@@ -36,7 +43,7 @@ class QuickJSConan(conan.ConanFile):
             text=True
         )
         self.version = perfetto_git_tag.stdout.strip()
-        print(f'Perfetto v{self.version}', file=sys.stderr)
+        print(f'Perfetto {self.version}', file=sys.stderr)
 
     def config_options(self):
         if self.settings.os == 'Windows':
