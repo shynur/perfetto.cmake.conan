@@ -25,6 +25,7 @@ class QuickJSConan(conan.ConanFile):
         'CMakeLists.txt',
         'cmake/*',
         'perfetto/*',
+        '.git/**/*',
     )
 
     def set_version(self):

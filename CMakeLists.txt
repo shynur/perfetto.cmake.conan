@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.23)
 
 execute_process(
+    COMMAND ls -A
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+execute_process(
     COMMAND git describe --tags --abbrev=0
-    WORKING_DIRECTORY perfetto
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/perfetto
     OUTPUT_VARIABLE PERFETTO_GIT_TAG
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )

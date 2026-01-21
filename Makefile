@@ -19,4 +19,4 @@ build:
 
 .PHONY: clean
 clean:
-	rm -rf build/ install/
+	rm -rf {.,test_package}/build/ install/
