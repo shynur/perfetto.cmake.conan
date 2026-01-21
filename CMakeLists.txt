@@ -36,6 +36,10 @@ target_link_libraries(perfetto
     PRIVATE
         ${CMAKE_THREAD_LIBS_INIT}
 )
+target_compile_features(perfetto
+    PRIVATE
+        cxx_std_17
+)
 
 
 if(WIN32)
