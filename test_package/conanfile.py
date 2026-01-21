@@ -3,12 +3,12 @@ import conan, conan.tools.cmake, conan.tools.build
 
 
 class PerfettoTestConan(conan.ConanFile):
-    settings = "os", "compiler", "build_type", "arch"
+    settings = 'os', 'compiler', 'build_type', 'arch'
     # VirtualBuildEnv and VirtualRunEnv can be avoided if "tools.env.virtualenv:auto_use" is defined
     # (it will be defined in Conan 2.0)
-    generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv", "VirtualRunEnv"
+    generators = 'CMakeDeps', 'CMakeToolchain', 'VirtualBuildEnv', 'VirtualRunEnv'
     apply_env = False
-    test_type = "explicit"
+    test_type = 'explicit'
 
     def requirements(self):
         self.requires(self.tested_reference_str)
@@ -23,5 +23,5 @@ class PerfettoTestConan(conan.ConanFile):
 
     def test(self):
         if not conan.tools.build.cross_building(self):
-            cmd = os.path.join(self.cpp.build.bindirs[0], "example")
-            self.run(cmd, env="conanrun")
+            cmd = os.path.join(self.cpp.build.bindirs[0], 'example')
+            self.run(cmd, env='conanrun')
