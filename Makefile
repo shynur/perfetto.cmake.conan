@@ -1,5 +1,11 @@
 SHELL := /bin/bash -O globstar
 
+.PHONY: conan
+conan:
+	rm -rf ~/.conan/data/Perfetto/*/shynur/dev
+	conan create . shynur/dev
+	conan upload --parallel -c --force --all -r my Perfetto/\*@shynur/dev
+
 .PHONY: install
 install: build
 	rm -rf install
@@ -8,8 +14,8 @@ install: build
 .PHONY: build
 build:
 	rm -rf build
-	cmake -B build -DBUILD_SHARED_LIBS=ON
-	cmake --build build
+	cmake -B build -S . --preset dev
+	cmake --build build --parallel
 
 .PHONY: clean
 clean:
