@@ -20,3 +20,4 @@ build:
 .PHONY: clean
 clean:
 	rm -rf {.,test_package}/build/ install/
+	rm -f test_package/CMakeUserPresets.json

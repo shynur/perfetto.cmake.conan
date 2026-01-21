@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 execute_process(
-    COMMAND ls -l perfetto/VERSION
+    COMMAND ls -Al perfetto
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 execute_process(
