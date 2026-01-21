@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.23)
 
 execute_process(
-    COMMAND ls -A
+    COMMAND ls -l perfetto/VERSION
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 execute_process(
-    COMMAND if [ -f VERSION ]; then cat VERSION; else git describe --tags --abbrev=0; fi
+    COMMAND bash -c "[ -f VERSION ] && cat VERSION || git describe --tags --abbrev=0"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/perfetto
     OUTPUT_VARIABLE PERFETTO_GIT_TAG
     OUTPUT_STRIP_TRAILING_WHITESPACE

@@ -20,7 +20,7 @@ target_sources(example
 )
 target_link_libraries(example
     PRIVATE
-        QuickJS::perfetto
+        Perfetto::perfetto
 )
 if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
     target_compile_options(example

@@ -22,8 +22,8 @@ class PerfettoConan(conan.ConanFile):
     }
 
     subprocess.run(
-        ['bash', '-c', "git describe --tags --abbrev=0 >VERSION"],
-        cwd='perfetto',
+        ['bash', '-c', "if [ -d perfetto ]; then cd perfetto; git describe --tags --abbrev=0 >VERSION; fi"],
+        cwd='.',
         stdout=subprocess.PIPE,
         text=True
     )
