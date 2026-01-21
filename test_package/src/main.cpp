@@ -27,7 +27,7 @@ void DrawGame() {
 }
 
 
-int main(int argc, char** argv) {
+int main() {
   perfetto::TracingInitArgs args;
   args.backends |= perfetto::kInProcessBackend;
   perfetto::Tracing::Initialize(args);
