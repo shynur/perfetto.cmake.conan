@@ -21,12 +21,10 @@ class QuickJSConan(conan.ConanFile):
         'fPIC': True,
     }
 
-    exports_sources = (
-        'CMakeLists.txt',
-        'cmake/*',
-        'perfetto/*',
-        '.git/**/*',
-    )
+    def exports_sources(self):
+        return (
+            '.git/*', 'CMakeLists.txt', 'cmake/*', 'perfetto/*',
+        )
 
     def set_version(self):
         print(f'RUNNING {__file__} @ {os.getcwd()}, in set_version', file=sys.stderr)
