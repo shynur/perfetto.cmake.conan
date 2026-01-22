@@ -14,6 +14,7 @@ target_sources(example
     PRIVATE
         src/main.cpp
         src/print_pkg_info.cpp
+        src/test.cpp
     PRIVATE
         FILE_SET  HEADERS
         BASE_DIRS include

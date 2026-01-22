@@ -2,37 +2,13 @@
 #include <fstream>
 #include <perfetto.h>
 #include "print_pkg_info.hpp"
+#include "test.hpp"
 
 PERFETTO_DEFINE_CATEGORIES(
     perfetto::Category("rendering").SetDescription("Events from the graphics subsystem"),
     perfetto::Category("network").SetDescription("Network upload and download statistics")
 );
 PERFETTO_TRACK_EVENT_STATIC_STORAGE();
-
-void DrawPlayer(const int player_number) {
-    TRACE_EVENT(
-        "rendering", "DrawPlayer",
-        "player_number", player_number
-    );
-}
-
-void DrawGame() {
-    TRACE_EVENT_BEGIN("rendering", "DrawGame");
-    DrawPlayer(1);
-    DrawPlayer(2);
-    TRACE_EVENT_END("rendering");
-
-    TRACE_COUNTER(
-        "rendering", "Framerate",
-        120
-    );
-}
-
-void test() {
-    for (int i = 0; i < 5; ++i) {
-        DrawGame();
-    }
-}
 
 int main() {
     perfetto::Tracing::Initialize([] {
