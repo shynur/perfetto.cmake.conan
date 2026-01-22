@@ -25,7 +25,7 @@ class PerfettoConan(conan.ConanFile):
         ['bash', '-c', "if [ -d perfetto ]; then cd perfetto; git describe --tags --abbrev=0 >VERSION; fi"],
         cwd='.',
         stdout=subprocess.PIPE,
-        text=True
+        universal_newlines=True
     )
     exports_sources = (
         'CMakeLists.txt',
@@ -40,7 +40,7 @@ class PerfettoConan(conan.ConanFile):
             ['git', 'describe', '--tags', '--abbrev=0'],
             cwd='perfetto',
             stdout=subprocess.PIPE,
-            text=True
+            universal_newlines=True
         )
         self.version = perfetto_git_tag.stdout.strip()
         print(f'Perfetto {self.version}', file=sys.stderr)
