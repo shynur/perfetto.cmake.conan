@@ -23,5 +23,5 @@ class PerfettoTestConan(conan.ConanFile):
 
     def test(self):
         if not conan.tools.build.cross_building(self):
-            cmd = os.path.join(self.cpp.build.bindirs[0], 'example')
-            self.run(cmd, env='conanrun')
+            cmd1 = os.path.join(self.cpp.build.bindirs[0], 'inproc-example')
+            self.run(cmd1, env='conanrun')
