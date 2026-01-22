@@ -52,7 +52,7 @@ target_sources(perfetto
 if(NOT HAS_CXX_FROM_CHARS)
     target_sources(perfetto
         PRIVATE
-            FILE_SET SHYNUR_POLYFILL_HEADERS
+            FILE_SET shynur_polyfill_headers
             TYPE HEADERS
             BASE_DIRS polyfill
     )
