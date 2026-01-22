@@ -44,7 +44,10 @@ if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
         -Wall -Wextra -Wpedantic
     )
     if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        add_library(stdc++)
+        find_package(stdc++)
+        if(stdc++_FOUND)
+            add_library(stdc++)
+        endif()
     endif()
 endif()
 

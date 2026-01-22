@@ -27,7 +27,7 @@ namespace shynur::polyfill <%
             return {.ptr = &first[1]};
         }
 
-        const auto result = std::strtoll(first, last, base);
+        const auto result = std::strtoll(first, &const_cast<char *&>(last), base);
         if (first == last)
             return {first, std::errc::invalid_argument};
         else if (errno == ERANGE) {
