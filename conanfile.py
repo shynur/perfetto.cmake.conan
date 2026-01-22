@@ -31,6 +31,7 @@ class PerfettoConan(conan.ConanFile):
         'CMakeLists.txt',
         'cmake/*',
         'perfetto/*',
+        'polyfill/*',
     )
 
     def set_version(self):

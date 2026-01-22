@@ -91,7 +91,6 @@ install(
    TARGETS  perfetto
     EXPORT  PerfettoTargets
   FILE_SET  HEADERS
-  FILE_SET  shynur_polyfill_headers
 )
 
 install(
