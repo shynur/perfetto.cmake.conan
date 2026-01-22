@@ -70,6 +70,6 @@ int main() {
     tracing_session->StopBlocking();
     const auto trace_data = tracing_session->ReadTraceBlocking();
     std::ofstream{
-        "example.pftrace", std::ios::out | std::ios::binary
+        "/tmp/a.pftrace", std::ios::out | std::ios::binary
     }.write(trace_data.data(), std::streamsize(trace_data.size()));
 }
