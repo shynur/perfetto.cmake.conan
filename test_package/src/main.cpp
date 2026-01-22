@@ -4,20 +4,7 @@
 #include "print_pkg_info.hpp"
 #include "test.hpp"
 
-PERFETTO_DEFINE_CATEGORIES(
-    perfetto::Category("rendering").SetDescription("Events from the graphics subsystem"),
-    perfetto::Category("network").SetDescription("Network upload and download statistics")
-);
-PERFETTO_TRACK_EVENT_STATIC_STORAGE();
-
 int main() {
-    perfetto::Tracing::Initialize([] {
-        auto args = perfetto::TracingInitArgs{};
-        args.backends |= perfetto::kInProcessBackend;
-        return args;
-    }());
-    perfetto::TrackEvent::Register();
-
     const auto tracing_session = [] {
         auto session = perfetto::Tracing::NewTrace();
         session->Setup([] {
