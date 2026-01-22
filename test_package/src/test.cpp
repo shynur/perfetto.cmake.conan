@@ -13,7 +13,7 @@ void DrawPlayer(const int player_number) {
     );
 }
 
-void DrawGame() {
+void DrawGame(const int n) {
     TRACE_EVENT_BEGIN("rendering", "DrawGame");
     DrawPlayer(1);
     DrawPlayer(2);
@@ -21,13 +21,13 @@ void DrawGame() {
 
     TRACE_COUNTER(
         "rendering", "Framerate",
-        120
+        n
     );
 }
 
 void test() {
-    for (int i = 0; i < 2; ++i) {
-        DrawGame();
+    for (int i = 0; i < 5; ++i) {
+        DrawGame(i);
         std::this_thread::sleep_for(10ms);
     }
 }
