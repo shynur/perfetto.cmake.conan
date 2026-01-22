@@ -24,6 +24,20 @@ target_link_libraries(inproc-example
         Perfetto::perfetto
 )
 
+add_executable(sys-example)
+target_sources(sys-example
+    PRIVATE
+        src/sys-example.cpp
+        src/print_pkg_info.cpp
+        src/test.cpp
+    PRIVATE
+        FILE_SET  HEADERS
+        BASE_DIRS include
+)
+target_link_libraries(sys-example
+    PRIVATE
+        Perfetto::perfetto
+)
 
 if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
     add_compile_options(

@@ -12,3 +12,4 @@ CMakeUserPresets.json
 tracebox
 
 *.perfetto-trace
+*.pftrace
