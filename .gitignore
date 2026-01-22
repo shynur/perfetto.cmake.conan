@@ -8,3 +8,7 @@
 CMakeUserPresets.json
 
 /perfetto/VERSION
+
+tracebox
+
+*.perfetto-trace
