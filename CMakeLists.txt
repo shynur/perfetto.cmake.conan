@@ -55,6 +55,9 @@ if(NOT HAS_CXX_FROM_CHARS)
             FILE_SET shynur_polyfill_headers
             TYPE HEADERS
             BASE_DIRS polyfill
+            FILES
+                polyfill/charconv
+                polyfill/shynur-polyfill.hpp
     )
 endif()
 target_link_libraries(perfetto
@@ -88,6 +91,7 @@ install(
    TARGETS  perfetto
     EXPORT  PerfettoTargets
   FILE_SET  HEADERS
+  FILE_SET  shynur_polyfill_headers
 )
 
 install(
