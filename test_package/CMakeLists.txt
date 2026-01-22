@@ -6,7 +6,7 @@ message(STATUS
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    add_compile_options(--gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/14)
+    #add_compile_options(--gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/14)
 endif()
 
 add_executable(inproc-example)
