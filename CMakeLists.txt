@@ -18,10 +18,27 @@ project(Perfetto
     LANGUAGES CXX
 )
 
+#---------------- config ---------------------
+include(CheckSourceCompiles)
 
+check_source_compiles(CXX
+    [[
+        #include <charconv>
+        #include <string>
+
+        int main() {
+            const auto s = std::string{"0x111"};
+            int result;
+            std::from_chars(s.c_str(), &*s.cend(), result, 16);
+        }
+    ]]
+    HAS_CXX_FROM_CHARS
+)
+
+#---------------- dependencies ----------------
 find_package(Threads)
 
-
+#---------------- libperfetto ----------------
 add_library(perfetto)
 target_sources(perfetto
     PRIVATE
@@ -32,6 +49,13 @@ target_sources(perfetto
         FILES
             perfetto/sdk/perfetto.h
 )
+if(NOT HAS_CXX_FROM_CHARS)
+    target_sources(perfetto
+        PRIVATE
+            FILE_SET  HEADERS
+            BASE_DIRS polyfill
+    )
+endif()
 target_link_libraries(perfetto
     PRIVATE
         ${CMAKE_THREAD_LIBS_INIT}
@@ -41,7 +65,7 @@ target_compile_features(perfetto
         cxx_std_17
 )
 
-
+#---------------- platform specific ----------------
 if(WIN32)
     target_compile_options(perfetto PRIVATE /bigobj)
     target_compile_definitions(perfetto
