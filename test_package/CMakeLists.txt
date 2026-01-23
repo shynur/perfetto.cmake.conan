@@ -43,11 +43,9 @@ if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
     add_compile_options(
         -Wall -Wextra -Wpedantic
     )
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        find_package(stdc++)
-        if(stdc++_FOUND)
-            add_library(stdc++)
-        endif()
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        add_compile_options(-stdlib=libstdc++)
+        add_link_options(-stdlib=libstdc++)
     endif()
 endif()
 
