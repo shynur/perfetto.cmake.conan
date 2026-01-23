@@ -21,6 +21,7 @@ if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
         -pthread
         -Wall -Wextra -Wpedantic
     )
+    add_link_options(-pthread)
 endif()
 
 #------------------------------------------
