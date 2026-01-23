@@ -17,7 +17,7 @@ class PerfettoConan(conan.ConanFile):
         'fPIC': [True, False],
     }
     default_options = {
-        'shared': True,
+        'shared': False,  # Alan 给 SDK 加了一个 weak 函数及调用, 必须用 obj 格式以允许覆盖它的定义.
         'fPIC': True,
     }
 
@@ -32,6 +32,7 @@ class PerfettoConan(conan.ConanFile):
         'cmake/*',
         'perfetto/*',
         'polyfill/*',
+        'patches/*',
     )
 
     def set_version(self):

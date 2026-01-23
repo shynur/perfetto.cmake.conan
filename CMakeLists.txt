@@ -36,21 +36,18 @@ find_package(Threads)
 
 #---------------- patch -----------------
 add_custom_command(
-  OUTPUT perfetto.cc
-  COMMAND  -i input.txt -o generated.cpp
-  DEPENDS patches/perfetto.cc.patch
-  VERBATIM
+    OUTPUT perfetto.patched.cc
+    COMMAND patch -i patches/perfetto.cc.patch -p0 -o perfetto.patched.cc
+    DEPENDS patches/perfetto.cc.patch
+    VERBATIM
 )
-
-add_library(GeneratedObject OBJECT)
-target_sources(GeneratedObject PRIVATE Generated.cxx)
 
 #---------------- libperfetto ----------------
 add_library(perfetto)
 add_library(Perfetto::perfetto ALIAS perfetto)
 target_sources(perfetto
     PRIVATE
-        perfetto/sdk/perfetto.cc
+        perfetto.patched.cc
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS perfetto/sdk
