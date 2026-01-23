@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.23)
 project(Example LANGUAGES CXX)
 
+execute_process(
+    COMMAND bash -c "echo CXX=$CXX"
+)
+set(CMAKE_CXX_COMPILER clang++-22)
 message(STATUS
     "Using C++ Compiler: ${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
 )
