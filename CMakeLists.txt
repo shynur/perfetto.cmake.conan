@@ -34,6 +34,17 @@ check_source_compiles(CXX
 #---------------- dependencies ----------------
 find_package(Threads)
 
+#---------------- patch -----------------
+add_custom_command(
+  OUTPUT perfetto.cc
+  COMMAND  -i input.txt -o generated.cpp
+  DEPENDS patches/perfetto.cc.patch
+  VERBATIM
+)
+
+add_library(GeneratedObject OBJECT)
+target_sources(GeneratedObject PRIVATE Generated.cxx)
+
 #---------------- libperfetto ----------------
 add_library(perfetto)
 add_library(Perfetto::perfetto ALIAS perfetto)
