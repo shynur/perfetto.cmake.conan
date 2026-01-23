@@ -1,6 +1,6 @@
---- perfetto/sdk/perfetto.cc	2026-01-23 13:53:10.642626125 +0800
-+++ perfetto/sdk/perfetto.patched.cc	2026-01-23 13:55:11.264121612 +0800
-@@ -45308,8 +45308,12 @@
+--- perfetto/sdk/perfetto.cc	2026-01-23 14:14:45.350452851 +0800
++++ perfetto/sdk/perfetto.patched.cc	2026-01-23 15:19:53.563668341 +0800
+@@ -45308,12 +45308,20 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
@@ -8,27 +8,31 @@
  // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_interned_fields.h"
 
 +void tr_expand_tag[[gnu::weak]](std::function<void(const std::string&)> set, const char *value) {
-+	set(value);
++    set(value);
 +}
-+namespace shynur::test_symbol {void real_tr_expand_tag() {::tr_expand_tag([](const std::string&){}, nullptr);}}
++namespace shynur::test_symbol {
++    void real_tr_expand_tag() {
++        ::tr_expand_tag([](const std::string&){}, nullptr);
++    }
++}
  namespace perfetto {
  namespace internal {
 
  InternedEventCategory::~InternedEventCategory() = default;
 
  // static
-@@ -45343,13 +45347,13 @@
- void InternedDebugAnnotationName::Add(
+@@ -45356,13 +45364,13 @@
+ void InternedDebugAnnotationValueTypeName::Add(
      protos::pbzero::InternedData* interned_data,
      size_t iid,
      const char* value) {
-   auto name = interned_data->add_debug_annotation_names();
+   auto name = interned_data->add_debug_annotation_value_type_names();
    name->set_iid(iid);
 -  name->set_name(value);
 +  ::tr_expand_tag([name](const std::string& v) {name->set_name(v);}, value);
  }
 
- InternedDebugAnnotationValueTypeName::~InternedDebugAnnotationValueTypeName() =
-     default;
-
- // static
+ }  // namespace internal
+ }  // namespace perfetto
+ // gen_amalgamated begin source: src/tracing/platform.cc
+ /*
