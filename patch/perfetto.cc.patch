@@ -1,0 +1,33 @@
+--- perfetto.cc	2026-01-23 13:53:10.642626125 +0800
++++ perfetto.patched.cc	2026-01-23 13:55:11.264121612 +0800
+@@ -45308,12 +45308,15 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+ 
+ // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_interned_fields.h"
+ 
++void auto tr_expand_tag[[gnu::weak]](std::function<void(const std::string&)> set, const char *value) {
++	set(value);
++}
+ namespace perfetto {
+ namespace internal {
+ 
+ InternedEventCategory::~InternedEventCategory() = default;
+ 
+ // static
+@@ -45343,13 +45346,13 @@
+ void InternedDebugAnnotationName::Add(
+     protos::pbzero::InternedData* interned_data,
+     size_t iid,
+     const char* value) {
+   auto name = interned_data->add_debug_annotation_names();
+   name->set_iid(iid);
+-  name->set_name(value);
++  ::tr_expand_tag([name](const std::string& v) {name->set_name(v);}, value);
+ }
+ 
+ InternedDebugAnnotationValueTypeName::~InternedDebugAnnotationValueTypeName() =
+     default;
+ 
+ // static
