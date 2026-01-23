@@ -37,7 +37,7 @@ find_package(Threads)
 #---------------- patch -----------------
 add_custom_command(
     OUTPUT perfetto.patched.cc
-    COMMAND patch -i patches/perfetto.cc.patch -p0 -o perfetto.patched.cc
+    COMMAND patch -i ${PROJECT_SOURCE_DIR}/patches/perfetto.cc.patch -p0 -o perfetto.patched.cc
     DEPENDS patches/perfetto.cc.patch
     VERBATIM
 )
