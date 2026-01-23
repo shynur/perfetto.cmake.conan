@@ -9,3 +9,12 @@ void tr_expand_tag(std::function<void(const std::string&)> set, const char *valu
     }();
 	set(value);
 }
+
+namespace shynur::test_symbol {
+    void real_tr_expand_tag();
+}
+
+static auto test_patched_func = []{
+    ::shynur::test_symbol::real_tr_expand_tag();
+    return 0;
+}();
