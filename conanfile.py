@@ -48,8 +48,8 @@ class PerfettoConan(conan.ConanFile):
             stdout=subprocess.PIPE,
             universal_newlines=True
         )
-        self.version = perfetto_git_tag.stdout.strip()
-        print(f'Perfetto {self.version}', file=sys.stderr)
+        self.version = perfetto_git_tag.stdout.strip()[1:]  # 去掉前面的 'v'
+        print(f'Perfetto v{self.version}', file=sys.stderr)
 
     def config_options(self):
         if self.settings.os == 'Windows':
