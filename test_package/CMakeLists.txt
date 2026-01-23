@@ -5,14 +5,25 @@ execute_process(
     COMMAND bash -c "echo CXX=$CXX"
 )
 set(CMAKE_CXX_STANDARD 17)
+
 message(STATUS
     "Using C++ Compiler: ${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-stdlib=libstdc++)
+    add_link_options(-stdlib=libstdc++)
     #add_compile_options(--gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/14)
 endif()
 
+if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
+    add_compile_options(
+        -pthread
+        -Wall -Wextra -Wpedantic
+    )
+endif()
+
+#------------------------------------------
 add_executable(inproc-example)
 target_sources(inproc-example
     PRIVATE
@@ -44,16 +55,5 @@ target_link_libraries(sys-example
     PRIVATE
         Perfetto::perfetto
 )
-
-if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
-    add_compile_options(
-        -pthread
-        -Wall -Wextra -Wpedantic
-    )
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        add_compile_options(-stdlib=libstdc++)
-        add_link_options(-stdlib=libstdc++)
-    endif()
-endif()
-
+#----------------------------------------
 find_package(Perfetto CONFIG REQUIRED)
