@@ -3,4 +3,4 @@
 make conan
 ```
 
-安装到 `~/.conan/data/Perfetto/v{VERSION}/` 目录下.
+安装到 `~/.conan/data/Perfetto/<VERSION>/` 目录下.
