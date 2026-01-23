@@ -4,7 +4,7 @@
 
 void tr_expand_tag(std::function<void(const std::string&)> set, const char *value) {
     static auto hello_patch [[maybe_unused]] = [] {
-        std::cout << "SEER Applied patch" << std::endl;
+        std::cout << "[SEER] Applied patch: " << __func__ << std::endl;
         return 0;
     }();
 	set(value);

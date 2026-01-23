@@ -19,6 +19,7 @@ target_sources(inproc-example
         src/inproc-example.cpp
         src/print_pkg_info.cpp
         src/test.cpp
+        src/use-patches.cpp
     PRIVATE
         FILE_SET  HEADERS
         BASE_DIRS include
