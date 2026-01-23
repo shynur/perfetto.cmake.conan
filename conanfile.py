@@ -22,7 +22,7 @@ class PerfettoConan(conan.ConanFile):
     }
 
     subprocess.run(
-        ['bash', '-c', "if [ -d perfetto ]; then cd perfetto; git describe --tags --abbrev=0 >VERSION; fi"],
+        ['bash', '-c', 'if [ -d perfetto ]; then cd perfetto; git config --global --add safe.directory "$PWD"; git describe --tags --abbrev=0 >VERSION; fi'],
         cwd='.',
         stdout=subprocess.PIPE,
         universal_newlines=True
@@ -37,6 +37,10 @@ class PerfettoConan(conan.ConanFile):
     def set_version(self):
         print(f'RUNNING {__file__} @ {os.getcwd()}, in set_version', file=sys.stderr)
 
+        subprocess.run(
+            ['bash', '-c', 'git config --global --add safe.directory "$PWD"'],
+            cwd='perfetto',
+        )
         perfetto_git_tag = subprocess.run(
             ['git', 'describe', '--tags', '--abbrev=0'],
             cwd='perfetto',
