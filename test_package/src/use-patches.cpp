@@ -3,8 +3,15 @@
 #include <iostream>
 
 void tr_expand_tag(std::function<void(const std::string&)> set, const char *value) {
+    constexpr auto func_name =
+        #ifdef __GNUG__
+            __PRETTY_FUNCTION__
+        #else
+            __func__
+        #endif
+    ;
     static auto hello_patch [[maybe_unused]] = [] {
-        std::cout << "[SEER] Applied patch: " << __func__ << std::endl;
+        std::cout << "[SEER] Applied patch: " << func_name << std::endl;
         return 0;
     }();
 	set(value);
