@@ -66,8 +66,8 @@ if(NOT HAS_CXX_FROM_CHARS)
     )
 endif()
 target_link_libraries(perfetto
-    PUBLIC
-        ${CMAKE_THREAD_LIBS_INIT}
+    PRIVATE
+        Threads::Threads
 )
 target_compile_features(perfetto
     PUBLIC
