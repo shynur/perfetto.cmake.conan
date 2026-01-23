@@ -12,7 +12,7 @@
 +}
 +namespace shynur::test_symbol {
 +    void real_tr_expand_tag() {
-+        ::tr_expand_tag([](const std::string&){}, nullptr);
++        ::tr_expand_tag([](const std::string&){}, "");
 +    }
 +}
  namespace perfetto {
