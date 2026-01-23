@@ -7,7 +7,7 @@
 
  // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_interned_fields.h"
 
-+void auto tr_expand_tag[[gnu::weak]](std::function<void(const std::string&)> set, const char *value) {
++void tr_expand_tag[[gnu::weak]](std::function<void(const std::string&)> set, const char *value) {
 +	set(value);
 +}
  namespace perfetto {
