@@ -4,6 +4,7 @@ project(Example LANGUAGES CXX)
 execute_process(
     COMMAND bash -c "echo CXX=$CXX"
 )
+#set(CMAKE_CXX_STANDARD 17)
 message(STATUS
     "Using C++ Compiler: ${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
 )

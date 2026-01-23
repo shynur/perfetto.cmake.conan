@@ -61,7 +61,7 @@ target_link_libraries(perfetto
         ${CMAKE_THREAD_LIBS_INIT}
 )
 target_compile_features(perfetto
-    PRIVATE
+    PUBLIC
         cxx_std_17
 )
 
