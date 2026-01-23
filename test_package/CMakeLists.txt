@@ -47,6 +47,7 @@ target_link_libraries(sys-example
 
 if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
     add_compile_options(
+        -pthread
         -Wall -Wextra -Wpedantic
     )
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
