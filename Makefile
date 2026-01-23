@@ -3,8 +3,8 @@ SHELL := /bin/bash -O globstar
 .PHONY: conan
 conan:
 	rm -rf ~/.conan/data/Perfetto/*/shynur/dev
-	conan create --profile:build conan.build.ini --profile:host conan.host.ini . shynur/dev
-	conan upload --parallel -c --force --all -r my Perfetto/\*@shynur/dev
+	conan create . shynur/dev --profile:build conan.build.ini --profile:host conan.host.ini
+	[ shynur = `whoami` ] && conan upload --parallel -c --force --all -r my Perfetto/\*@shynur/dev
 
 .PHONY: install
 install: build
