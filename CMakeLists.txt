@@ -36,6 +36,7 @@ find_package(Threads)
 
 #---------------- libperfetto ----------------
 add_library(perfetto)
+add_library(Perfetto::perfetto ALIAS perfetto)
 target_sources(perfetto
     PRIVATE
         perfetto/sdk/perfetto.cc
