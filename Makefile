@@ -19,7 +19,7 @@ build: install-cmake fetch-perfetto-git-tags
 
 .PHONY: fetch-perfetto-git-tags
 fetch-perfetto-git-tags:
-	cd perfetto;                                       \	
+	cd perfetto;                                       \
 	if ! [ git describe --tags --abbrev=0 ]; then      \
 		git fetch tags;                            \
 	fi
