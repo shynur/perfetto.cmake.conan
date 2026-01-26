@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NEED_INSTALL_CMAKE=
-if ! [ which cmake ]; then
+if ! which cmake; then
     NEED_INSTALL_CMAKE=1
 elif ! cmake --version >/dev/null; then
     NEED_INSTALL_CMAKE=1
