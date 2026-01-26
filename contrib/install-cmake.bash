@@ -5,7 +5,7 @@ if ! which cmake; then
     NEED_INSTALL_CMAKE=1
 elif ! cmake --version >/dev/null; then
     NEED_INSTALL_CMAKE=1
-elif [ v3.23 = v`{ echo 3.23; cmake --version | egrep '^cmake version [[:digit:]]+[.][[:digit:]]+' | awk '{printf $3}'; } | sort -V | head -1` ]; then
+elif [ v3.23 != v`{ echo 3.23; cmake --version | egrep '^cmake version [[:digit:]]+[.][[:digit:]]+' | awk '{printf $3}'; } | sort -V | head -1` ]; then
     NEED_INSTALL_CMAKE=1
 fi
 
