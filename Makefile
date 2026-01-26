@@ -1,21 +1,25 @@
 SHELL := /bin/bash -O globstar
 
 .PHONY: conan
-conan:
+conan: install-cmake
 	rm -rf ~/.conan/data/Perfetto/*/shynur/dev
 	conan create . shynur/dev `[ shynur = \`whoami\` ] && echo '' --profile:build conan.build.ini --profile:host conan.host.ini`
 	if [ shynur = `whoami` ]; then conan upload --parallel -c --force --all -r my Perfetto/\*@shynur/dev; fi
 
 .PHONY: install
-install: build
+install: build install-cmake
 	rm -rf install
 	cmake --install build --prefix install
 
 .PHONY: build
-build:
+build: install-cmake
 	rm -rf build
 	cmake -B build -S . --preset dev
 	cmake --build build --parallel
+
+.PHONY: install-cmake
+install-cmake:
+	./contrib/install-cmake.bash
 
 .PHONY: clean
 clean:
