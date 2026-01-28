@@ -1,5 +1,4 @@
 ```bash
-./contrib/install-cmake.bash
 make conan
 ```
 
