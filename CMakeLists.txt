@@ -74,6 +74,22 @@ target_compile_features(perfetto
         cxx_std_17
 )
 
+#---------------- rbk perfetto::internal ----------------
+add_library(internal INTERFACE)
+add_library(Perfetto::internal ALIAS internal)
+
+target_sources(perfetto::internal
+    INTERFACE
+        FILE_SET HEADERS
+        FILE_SET
+            perfetto/include/perfetto/tracing/internal/track_event_interned_fields.h
+        BASE_DIRS
+            perfetto/include
+)
+target_link_libraries(internal
+    INTERFACE
+        perfetto
+)
 #---------------- platform specific ----------------
 if(WIN32)
     target_compile_options(perfetto PRIVATE /bigobj)
@@ -93,7 +109,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(
-   TARGETS  perfetto
+   TARGETS  perfetto internal
     EXPORT  PerfettoTargets
   FILE_SET  HEADERS
 )
