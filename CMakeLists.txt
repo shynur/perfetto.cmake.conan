@@ -77,10 +77,10 @@ target_compile_features(perfetto
         cxx_std_17
 )
 if(Perfetto_IPO_supported)
-    set_target_properties(perfetto
-        PROPERTIES
-            #INTERPROCEDURAL_OPTIMIZATION TRUE
-    )
+    #set_target_properties(perfetto
+    #    PROPERTIES
+    #        INTERPROCEDURAL_OPTIMIZATION TRUE
+    #)
 endif()
 set_target_properties(perfetto
     PROPERTIES
