@@ -1,4 +1,5 @@
 #include <perfetto.h>
+#include <perfetto/tracing/internal/track_event_interned_fields.h>
 
 void test();
 
