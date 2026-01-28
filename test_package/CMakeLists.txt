@@ -38,7 +38,7 @@ target_sources(inproc-example
 )
 target_link_libraries(inproc-example
     PRIVATE
-        Perfetto::perfetto
+        #Perfetto::perfetto
         Perfetto::entire_include
 )
 
@@ -56,7 +56,7 @@ target_sources(sys-example
 )
 target_link_libraries(sys-example
     PRIVATE
-        Perfetto::perfetto
+        #Perfetto::perfetto
         Perfetto::entire_include
 )
 #----------------------------------------
