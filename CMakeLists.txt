@@ -78,7 +78,7 @@ add_library(entire_include INTERFACE)
 add_library(Perfetto::entire_include ALIAS entire_include)
 file(GLOB_RECURSE
     Perfetto_include_headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/perfetto/include/perfetto/**/*
+    ${CMAKE_CURRENT_SOURCE_DIR}/perfetto/include/perfetto/*
 )
 target_sources(entire_include
     INTERFACE
