@@ -82,6 +82,12 @@ if(Perfetto_IPO_supported)
             INTERPROCEDURAL_OPTIMIZATION TRUE
     )
 endif()
+if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
+    target_compile_options(perfetto
+        PRIVATE
+            -mstackrealign -mno-avx -mno-avx2 -mno-avx512f -mno-fma -mno-bmi -mno-bmi2
+    )  # RBK requirement
+endif()
 
 add_library(entire_include INTERFACE)
 add_library(Perfetto::entire_include ALIAS entire_include)
