@@ -74,19 +74,21 @@ target_compile_features(perfetto
         cxx_std_17
 )
 
-#---------------- rbk perfetto::internal ----------------
-add_library(internal INTERFACE)
-add_library(Perfetto::internal ALIAS internal)
-
-target_sources(internal
+add_library(entire_include INTERFACE)
+add_library(Perfetto::entire_include ALIAS entire_include)
+file(GLOB_RECURSE
+    Perfetto_include_headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/perfetto/include/perfetto/**/*
+)
+target_sources(entire_include
     INTERFACE
         FILE_SET HEADERS
-        FILES
-            perfetto/include/perfetto/tracing/internal/track_event_interned_fields.h
         BASE_DIRS
             perfetto/include
+        FILES
+            ${Perfetto_include_headers}
 )
-target_link_libraries(internal
+target_link_libraries(entire_include
     INTERFACE
         perfetto
 )
@@ -111,7 +113,7 @@ include(CMakePackageConfigHelpers)
 install(
     TARGETS
         perfetto
-        internal  # RBK 用到了这玩意, 我也很无奈.
+        entire_include  # RBK 用到了这玩意, 我也很无奈.
     EXPORT
         PerfettoTargets
     FILE_SET
