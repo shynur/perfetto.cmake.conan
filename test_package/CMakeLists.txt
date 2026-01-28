@@ -37,7 +37,8 @@ target_sources(inproc-example
 )
 target_link_libraries(inproc-example
     PRIVATE
-        Perfetto::perfetto
+        #Perfetto::perfetto
+        Perfetto::entire_include
 )
 
 add_executable(sys-example)
@@ -53,7 +54,8 @@ target_sources(sys-example
 )
 target_link_libraries(sys-example
     PRIVATE
-        Perfetto::perfetto
+        #Perfetto::perfetto
+        Perfetto::entire_include
 )
 #----------------------------------------
 find_package(Perfetto CONFIG REQUIRED)

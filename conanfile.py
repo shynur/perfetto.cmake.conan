@@ -76,3 +76,6 @@ class PerfettoConan(conan.ConanFile):
 
         self.cpp_info.components['perfetto'].set_property('cmake_target_name', 'Perfetto::perfetto')
         self.cpp_info.components['perfetto'].libs = ['perfetto']
+
+        self.cpp_info.components['entire_include'].set_property('cmake_target_name', 'Perfetto::entire_include')
+        self.cpp_info.components['entire_include'].requires = ['perfetto']
