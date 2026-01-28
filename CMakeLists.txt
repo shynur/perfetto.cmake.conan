@@ -78,10 +78,10 @@ target_compile_features(perfetto
 add_library(internal INTERFACE)
 add_library(Perfetto::internal ALIAS internal)
 
-target_sources(perfetto::internal
+target_sources(internal
     INTERFACE
         FILE_SET HEADERS
-        FILE_SET
+        FILES
             perfetto/include/perfetto/tracing/internal/track_event_interned_fields.h
         BASE_DIRS
             perfetto/include
@@ -109,9 +109,13 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(
-   TARGETS  perfetto internal
-    EXPORT  PerfettoTargets
-  FILE_SET  HEADERS
+    TARGETS
+        perfetto
+        internal  # RBK 用到了这玩意, 我也很无奈.
+    EXPORT
+        PerfettoTargets
+    FILE_SET
+        HEADERS
 )
 
 install(

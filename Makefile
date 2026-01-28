@@ -19,10 +19,10 @@ build: install-cmake fetch-perfetto-git-tags
 
 .PHONY: fetch-perfetto-git-tags
 fetch-perfetto-git-tags:
-	cd perfetto;                                       \
-	git config --global --add safe.directory "$PWD";   \
-	if ! git describe --tags --abbrev=0; then          \
-		git fetch tags;                            \
+	cd perfetto;                                           \
+	git config --global --add safe.directory "$$PWD";      \
+	if ! git describe --tags --abbrev=0 2>/dev/null; then  \
+		git fetch --tags;                                  \
 	fi
 
 .PHONY: install-cmake
