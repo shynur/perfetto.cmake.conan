@@ -43,6 +43,9 @@ add_custom_command(
 )
 
 #---------------- libperfetto ----------------
+include(CheckIPOSupported)
+check_ipo_supported(RESULT Perfetto_IPO_supported OUTPUT output)
+
 add_library(perfetto)
 add_library(Perfetto::perfetto ALIAS perfetto)
 target_sources(perfetto
@@ -73,6 +76,12 @@ target_compile_features(perfetto
     PUBLIC
         cxx_std_17
 )
+if(Perfetto_IPO_supported)
+    set_target_properties(perfetto
+        PROPERTIES
+            INTERPROCEDURAL_OPTIMIZATION TRUE
+    )
+endif()
 
 add_library(entire_include INTERFACE)
 add_library(Perfetto::entire_include ALIAS entire_include)

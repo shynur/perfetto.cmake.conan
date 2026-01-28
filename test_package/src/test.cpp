@@ -1,5 +1,4 @@
-//#include <perfetto.h>
-#include <perfetto/tracing.h>
+#include <perfetto.h>
 #include <thread>
 using namespace std::literals;
 #include <variant>

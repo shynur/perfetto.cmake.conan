@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
-//#include <perfetto.h>
-#include <perfetto/tracing.h>
+#include <perfetto.h>
 #include "print_pkg_info.hpp"
 #include "test.hpp"
 

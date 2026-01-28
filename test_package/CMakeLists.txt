@@ -31,13 +31,14 @@ target_sources(inproc-example
         src/print_pkg_info.cpp
         src/test.cpp
         src/use-patches.cpp
+        src/rbk-use-internal.cpp
     PRIVATE
         FILE_SET  HEADERS
         BASE_DIRS include
 )
 target_link_libraries(inproc-example
     PRIVATE
-        #Perfetto::perfetto
+        Perfetto::perfetto
         Perfetto::entire_include
 )
 
@@ -48,13 +49,14 @@ target_sources(sys-example
         src/print_pkg_info.cpp
         src/test.cpp
         src/use-patches.cpp
+        src/rbk-use-internal.cpp
     PRIVATE
         FILE_SET  HEADERS
         BASE_DIRS include
 )
 target_link_libraries(sys-example
     PRIVATE
-        #Perfetto::perfetto
+        Perfetto::perfetto
         Perfetto::entire_include
 )
 #----------------------------------------
