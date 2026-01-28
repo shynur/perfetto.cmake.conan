@@ -2,7 +2,7 @@
 #include <perfetto/tracing/internal/track_event_interned_fields.h>
 
 void use_internal(perfetto::EventContext ctx, const char *KEY, const char *TAG) {
-    bool(perfetto::internal::IsValidEventNameType<decltype(KEY)>::value);
+    auto _ = bool(perfetto::internal::IsValidEventNameType<decltype(KEY)>::value);
 
     auto isctx = ctx.GetIncrementalState();
     auto da = ctx.event()->add_debug_annotations();
