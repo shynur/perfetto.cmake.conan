@@ -79,9 +79,13 @@ target_compile_features(perfetto
 if(Perfetto_IPO_supported)
     set_target_properties(perfetto
         PROPERTIES
-            INTERPROCEDURAL_OPTIMIZATION TRUE
+            #INTERPROCEDURAL_OPTIMIZATION TRUE
     )
 endif()
+set_target_properties(perfetto
+    PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+)
 if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
     target_compile_options(perfetto
         PRIVATE
