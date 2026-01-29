@@ -78,13 +78,14 @@ from_chars_result from_chars(const char *const first, const char *const last, In
                 throw std::out_of_range{""};
         } else {
             static_assert(
-                //false,
+                //false
                    std::is_same_v<Integer, int>
                 or std::is_same_v<Integer, long>
                 or std::is_same_v<Integer, long long>
                 or std::is_same_v<Integer, unsigned long>
-                or std::is_same_v<Integer, unsigned long long>,
-                "shynur::polyfill::from_chars unsupported integral type: it'll be implemented in the future"
+                or std::is_same_v<Integer, unsigned long long>
+                or std::is_same_v<Integer, std::uint32_t> and sizeof(long long) > sizeof(std::uint32_t)
+                , "shynur::polyfill::from_chars unsupported integral type: it'll be implemented in the future"
             );
         }
     } catch(const std::invalid_argument&) {
