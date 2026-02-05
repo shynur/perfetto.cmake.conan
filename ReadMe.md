@@ -1,3 +1,5 @@
+有以下 3 种方式集成 perfetto.
+
 # Conan
 
 ```bash
