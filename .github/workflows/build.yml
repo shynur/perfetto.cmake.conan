@@ -1,0 +1,35 @@
+name: Build and Install Perfetto
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Fetch perfetto git tags
+        run: |
+          cd perfetto
+          git config --global --add safe.directory "$PWD"
+          git fetch --tags
+
+      - name: Configure
+        run: cmake -B build -S . --preset dev
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Install
+        run: cmake --install build --prefix install
+
+      - name: Upload install directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: perfetto-install
+          path: install/
