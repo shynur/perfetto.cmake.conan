@@ -14,7 +14,7 @@ install: build
 .PHONY: build
 build: install-cmake fetch-perfetto-git-tags
 	rm -rf build
-	cmake -B build -S . --preset dev
+	cmake -B build -S . --preset dev $$SEER_RBK_PERFETTO_CMAKE_BUILD_FLAGS
 	cmake --build build --parallel
 
 .PHONY: fetch-perfetto-git-tags
