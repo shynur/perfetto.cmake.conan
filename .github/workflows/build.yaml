@@ -13,9 +13,8 @@
 # 4. Push the artifact `install-*.tar.gz` (force overwrite if it already exists) to the GitHub Release page corresponding to the tag created above.
 #
 # Build in parallel based on two docker images:
-# - x64:   `docker.cnb.cool/seer-robotics/robokit/release/build-kit:x86_64-1.0.3`
-# - arm64: `docker.cnb.cool/seer-robotics/robokit/release/build-kit:multi-latest`, and build the artifact with `SEER_RBK_PERFETTO_CMAKE_BUILD_FLAGS=-DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake make install`
-
+# - `docker.cnb.cool/seer-robotics/robokit/release/build-kit:x86_64-1.0.3`: Target is x64.
+# - `docker.cnb.cool/seer-robotics/robokit/release/build-kit:multi-latest`: Target is arm64 (cross build).  Build the artifact with `SEER_RBK_PERFETTO_CMAKE_BUILD_FLAGS=-DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake make install`
 
 name: Build
 on:
@@ -66,16 +65,16 @@ jobs:
             gh release create $RELEASE_TAG --title $RELEASE_TAG --notes ''
           fi
   build:
-    name: Build ${{ matrix.arch }}
+    name: Build ${{ matrix.target-arch }}
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - arch: x64
+          - target-arch: x64
             image: docker.cnb.cool/seer-robotics/robokit/release/build-kit:x86_64-1.0.3
-          - arch: arm64
+          - target-arch: arm64
             image: docker.cnb.cool/seer-robotics/robokit/release/build-kit:multi-latest
     steps:
       - name: Checkout repository (shallow + submodules)
@@ -95,17 +94,17 @@ jobs:
           set -euo pipefail
           docker run --rm --volume `pwd`/:/ws/ --workdir /ws ${{ matrix.image }} bash -c '
             set -euo pipefail
-            if [ $HOSTTYPE = x86_64 ]; then
+            if [ ${{ matrix.target-arch }} = arm64 ]; then
               export SEER_RBK_PERFETTO_CMAKE_BUILD_FLAGS=-DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake
             fi
             make install
-            tar -cvf install-`sed -e s/^x86_64\$/x64/ -e s/^aarch64\$/arm64/ <<<$HOSTTYPE`.tar.gz -I "gzip -9" ./install/
+            tar -cvf install-${{ matrix.target-arch }}.tar.gz -I "gzip -9" ./install/
           '
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: install-${{ matrix.arch }}
-          path: install-${{ matrix.arch }}.tar.gz
+          name: install-${{ matrix.target-arch }}
+          path: install-${{ matrix.target-arch }}.tar.gz
           if-no-files-found: error
   release:
     name: Upload release assets
