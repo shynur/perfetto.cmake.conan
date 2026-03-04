@@ -99,7 +99,7 @@ jobs:
               export SEER_RBK_PERFETTO_CMAKE_BUILD_FLAGS=-DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake
             fi
             make install
-            mv install{,${{ matrix.target-arch }}}
+            mv install{,-${{ matrix.target-arch }}}
           '
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
