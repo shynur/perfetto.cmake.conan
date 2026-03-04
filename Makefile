@@ -9,7 +9,7 @@ conan: install-cmake fetch-perfetto-git-tags
 .PHONY: install
 install: build
 	rm -rf install
-	cmake --install build --prefix install
+	cmake --install build --prefix install >/dev/null
 
 .PHONY: build
 build: install-cmake fetch-perfetto-git-tags
