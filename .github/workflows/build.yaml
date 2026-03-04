@@ -92,12 +92,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          docker run --rm --volume `pwd`/:/ws/ --workdir /ws ${{ matrix.image }} bash -c '
+          docker pull ${{ matrix.image }} >/dev/null
+          docker run --rm -v `pwd`/:/ws/ --workdir /ws ${{ matrix.image }} bash -c '
             set -euo pipefail
             if [ ${{ matrix.target-arch }} = arm64 ]; then
               export SEER_RBK_PERFETTO_CMAKE_BUILD_FLAGS=-DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake
             fi
             make install
+            mv install{,${{ matrix.target-arch }}}
           '
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
