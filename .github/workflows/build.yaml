@@ -135,6 +135,7 @@ jobs:
           fi
           (
             cd dist
+            ls -Al
             for d in install-*/; do
               d=`basename $d`
               tar -cvf $d.tar.gz -I 'gzip -9' $d/
