@@ -105,7 +105,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: install-${{ matrix.target-arch }}
-          path: install-${{ matrix.target-arch }}/
+          path: install-${{ matrix.target-arch }}
           if-no-files-found: error
   release:
     name: Upload release assets
