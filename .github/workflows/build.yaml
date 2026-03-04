@@ -137,7 +137,7 @@ jobs:
             cd dist
             for d in install-*/; do
               d=`basename $d`
-              tar -cvf $d.tar.gz -I 'gzip -9' $d/
+              tar -cf $d.tar.gz -I 'gzip -9' $d/
             done
           )
-          gh release upload $RELEASE_TAG dist/install-*.tar.gz --clobber
+          gh release upload $RELEASE_TAG dist/install-*.tar.gz --clobber --repo $GITHUB_REPOSITORY
