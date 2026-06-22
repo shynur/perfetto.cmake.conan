@@ -8,6 +8,7 @@
 CMakeUserPresets.json
 
 /perfetto/VERSION
+/perfetto/sdk/
 
 tracebox
 

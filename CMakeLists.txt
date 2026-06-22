@@ -9,6 +9,57 @@ execute_process(
 string(SUBSTRING ${PERFETTO_GIT_TAG} 1 -1 PERFETTO_VERSION)
 message(STATUS "Perfetto v${PERFETTO_VERSION}")
 
+#---------------- fetch amalgamated SDK (perfetto v54+) ----------------
+# v53 及更早: sdk/perfetto.{cc,h} 提交在 submodule git 树里, 此块跳过.
+# v54 起: 上游不再把 SDK 提交进仓库, 改为以 release 资产 perfetto-cpp-sdk-src.zip
+#         单独发布, 需在配置期下载并放回 perfetto/sdk/ 老位置.
+set(PERFETTO_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/perfetto/sdk)
+set(PERFETTO_SDK_URL
+    "https://github.com/google/perfetto/releases/download/${PERFETTO_GIT_TAG}/perfetto-cpp-sdk-src.zip"
+    CACHE STRING "URL of the Perfetto amalgamated C++ SDK source zip")
+
+set(_perfetto_need_sdk TRUE)
+if(EXISTS ${PERFETTO_SDK_DIR}/perfetto.cc
+   AND EXISTS ${PERFETTO_SDK_DIR}/perfetto.h
+   AND EXISTS ${PERFETTO_SDK_DIR}/.sdk-version)
+    # 下载得来的 SDK: 用版本戳记判断是否与当前 tag 匹配, 不匹配则重下,
+    # 避免 submodule 升级 tag 后旧 SDK 残留造成版本错配.
+    file(READ ${PERFETTO_SDK_DIR}/.sdk-version _perfetto_cached_ver)
+    string(STRIP "${_perfetto_cached_ver}" _perfetto_cached_ver)
+    if(_perfetto_cached_ver STREQUAL PERFETTO_GIT_TAG)
+        set(_perfetto_need_sdk FALSE)
+    endif()
+elseif(EXISTS ${PERFETTO_SDK_DIR}/perfetto.cc AND EXISTS ${PERFETTO_SDK_DIR}/perfetto.h)
+    # v53 及更早: 文件由 submodule 自带, 无 .sdk-version 戳记, 视为就位.
+    set(_perfetto_need_sdk FALSE)
+endif()
+
+if(_perfetto_need_sdk)
+    if(NOT PERFETTO_GIT_TAG MATCHES "^v[0-9]")
+        message(FATAL_ERROR
+            "下载 Perfetto SDK 需要有效的版本 tag, 当前 PERFETTO_GIT_TAG='${PERFETTO_GIT_TAG}'. "
+            "请在 submodule 内执行 `git fetch --tags`.")
+    endif()
+    message(STATUS "Fetching Perfetto SDK ${PERFETTO_GIT_TAG} from ${PERFETTO_SDK_URL}")
+    set(_perfetto_zip ${CMAKE_CURRENT_BINARY_DIR}/perfetto-cpp-sdk-src.zip)
+    file(DOWNLOAD ${PERFETTO_SDK_URL} ${_perfetto_zip} TLS_VERIFY ON STATUS _perfetto_dl_st)
+    list(GET _perfetto_dl_st 0 _perfetto_dl_code)
+    if(NOT _perfetto_dl_code EQUAL 0)
+        list(GET _perfetto_dl_st 1 _perfetto_dl_msg)
+        file(REMOVE ${_perfetto_zip})
+        message(FATAL_ERROR "下载 Perfetto SDK 失败 (${PERFETTO_SDK_URL}): ${_perfetto_dl_msg}")
+    endif()
+    set(_perfetto_extract ${CMAKE_CURRENT_BINARY_DIR}/perfetto-sdk-extract)
+    file(REMOVE_RECURSE ${_perfetto_extract})
+    file(ARCHIVE_EXTRACT INPUT ${_perfetto_zip} DESTINATION ${_perfetto_extract})
+    file(MAKE_DIRECTORY ${PERFETTO_SDK_DIR})
+    file(COPY
+        ${_perfetto_extract}/perfetto.h
+        ${_perfetto_extract}/perfetto.cc
+        DESTINATION ${PERFETTO_SDK_DIR})
+    file(WRITE ${PERFETTO_SDK_DIR}/.sdk-version "${PERFETTO_GIT_TAG}\n")
+endif()
+
 project(Perfetto
     VERSION ${PERFETTO_VERSION}
     LANGUAGES CXX
@@ -38,7 +89,7 @@ find_package(Threads)
 add_custom_command(
     OUTPUT perfetto.patched.cc
     COMMAND patch -i ${PROJECT_SOURCE_DIR}/patches/perfetto.cc.patch -d ${PROJECT_SOURCE_DIR} -p0 -o ${CMAKE_CURRENT_BINARY_DIR}/perfetto.patched.cc
-    DEPENDS patches/perfetto.cc.patch
+    DEPENDS patches/perfetto.cc.patch ${PERFETTO_SDK_DIR}/perfetto.cc
     VERBATIM
 )
 
