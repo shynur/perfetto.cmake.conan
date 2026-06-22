@@ -6,7 +6,15 @@ execute_process(
     OUTPUT_VARIABLE PERFETTO_GIT_TAG
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-string(SUBSTRING ${PERFETTO_GIT_TAG} 1 -1 PERFETTO_VERSION)
+# 提前校验 tag: 空值 (shallow clone 且无 VERSION 文件, git describe 失败) 若直接
+# 进入下面的 string(SUBSTRING) 会以晦涩的内部错误中断 configure; 在此给出可操作的
+# 友好诊断.  下方下载块因而无需再重复校验.
+if(NOT PERFETTO_GIT_TAG MATCHES "^v[0-9]")
+    message(FATAL_ERROR
+        "无法确定 Perfetto 版本 tag (PERFETTO_GIT_TAG='${PERFETTO_GIT_TAG}'). "
+        "请在 submodule 内执行 `git fetch --tags`.")
+endif()
+string(SUBSTRING "${PERFETTO_GIT_TAG}" 1 -1 PERFETTO_VERSION)
 message(STATUS "Perfetto v${PERFETTO_VERSION}")
 
 #---------------- fetch amalgamated SDK (perfetto v54+) ----------------
@@ -35,11 +43,6 @@ elseif(EXISTS ${PERFETTO_SDK_DIR}/perfetto.cc AND EXISTS ${PERFETTO_SDK_DIR}/per
 endif()
 
 if(_perfetto_need_sdk)
-    if(NOT PERFETTO_GIT_TAG MATCHES "^v[0-9]")
-        message(FATAL_ERROR
-            "下载 Perfetto SDK 需要有效的版本 tag, 当前 PERFETTO_GIT_TAG='${PERFETTO_GIT_TAG}'. "
-            "请在 submodule 内执行 `git fetch --tags`.")
-    endif()
     message(STATUS "Fetching Perfetto SDK ${PERFETTO_GIT_TAG} from ${PERFETTO_SDK_URL}")
     set(_perfetto_zip ${CMAKE_CURRENT_BINARY_DIR}/perfetto-cpp-sdk-src.zip)
     file(DOWNLOAD ${PERFETTO_SDK_URL} ${_perfetto_zip} TLS_VERIFY ON STATUS _perfetto_dl_st)
@@ -53,6 +56,13 @@ if(_perfetto_need_sdk)
     file(REMOVE_RECURSE ${_perfetto_extract})
     file(ARCHIVE_EXTRACT INPUT ${_perfetto_zip} DESTINATION ${_perfetto_extract})
     file(MAKE_DIRECTORY ${PERFETTO_SDK_DIR})
+    # 先清除旧的 SDK 与戳记: 万一 COPY 与写戳记之间 configure 被中断 (Ctrl-C/OOM),
+    # 留下的将是"无戳记"的残缺状态, 下次 configure 会重新下载, 而不会被下面的
+    # 向后兼容分支误判成 v53 自带文件而跳过.
+    file(REMOVE
+        ${PERFETTO_SDK_DIR}/.sdk-version
+        ${PERFETTO_SDK_DIR}/perfetto.cc
+        ${PERFETTO_SDK_DIR}/perfetto.h)
     file(COPY
         ${_perfetto_extract}/perfetto.h
         ${_perfetto_extract}/perfetto.cc

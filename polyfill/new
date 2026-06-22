@@ -26,13 +26,15 @@
 namespace std {
 #  if defined(__has_builtin) && __has_builtin(__builtin_launder)
     // __builtin_launder 自 Clang 6.0 / GCC 7 起可用, 是 std::launder 的正确底层实现.
+    // 标准的 std::launder 是 constexpr (C++17 起), __builtin_launder 可用于常量求值,
+    // 故保留 constexpr 以与标准签名一致, 支持 constexpr 调用方.
     template<typename T>
-    [[nodiscard]] T* launder(T* p) noexcept { return __builtin_launder(p); }
+    [[nodiscard]] constexpr T* launder(T* p) noexcept { return __builtin_launder(p); }
 #  else
     // 极旧编译器既无 std::launder 又无 __builtin_launder 时的退路: 直接返回原指针.
     // 语义上不完全等价 (不保证别名屏障), 但能编过且在多数实现上恰好工作.
     template<typename T>
-    [[nodiscard]] T* launder(T* p) noexcept { return p; }
+    [[nodiscard]] constexpr T* launder(T* p) noexcept { return p; }
 #  endif
 }
 #endif
