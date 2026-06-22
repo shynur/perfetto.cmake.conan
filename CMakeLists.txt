@@ -68,6 +68,14 @@ project(Perfetto
 #---------------- config ---------------------
 include(CheckSourceCompiles)
 
+# perfetto 以 C++17 编译 (见下方 cxx_std_17).  check_source_compiles 默认使用
+# 编译器的默认标准 (常为 C++14), 这会让 std::launder / std::from_chars 等被
+# `#if __cplusplus >= 201703L` 守护的特性在检测时不可见 -> 假阴性 -> 误注入
+# polyfill, 进而与真实 C++17 编译时系统已提供的声明冲突.  故让检测也用 C++17.
+# (cmake_minimum_required(3.23) 使 CMP0067=NEW, try_compile 会沿用下列变量.)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 check_source_compiles(CXX
     [[
         #include <charconv>

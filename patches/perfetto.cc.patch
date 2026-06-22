@@ -1,12 +1,9 @@
---- perfetto/sdk/perfetto.cc	2026-01-23 14:14:45.350452851 +0800
-+++ perfetto/sdk/perfetto.patched.cc	2026-01-23 15:19:53.563668341 +0800
-@@ -45308,12 +45308,20 @@
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
-  */
-
+--- perfetto/sdk/perfetto.cc
++++ perfetto/sdk/perfetto.patched.cc
+@@ -48972,6 +48972,14 @@
+ 
  // gen_amalgamated expanded: #include "perfetto/tracing/internal/track_event_interned_fields.h"
-
+ 
 +void tr_expand_tag[[gnu::weak]](std::function<void(const std::string&)> set, const char *value) {
 +    set(value);
 +}
@@ -17,22 +14,35 @@
 +}
  namespace perfetto {
  namespace internal {
-
- InternedEventCategory::~InternedEventCategory() = default;
-
- // static
-@@ -45356,13 +45364,13 @@
- void InternedDebugAnnotationValueTypeName::Add(
-     protos::pbzero::InternedData* interned_data,
-     size_t iid,
+ 
+@@ -49020,7 +49028,7 @@
      const char* value) {
    auto name = interned_data->add_debug_annotation_value_type_names();
    name->set_iid(iid);
 -  name->set_name(value);
 +  ::tr_expand_tag([name](const std::string& v) {name->set_name(v);}, value);
  }
-
+ 
  }  // namespace internal
- }  // namespace perfetto
- // gen_amalgamated begin source: src/tracing/platform.cc
- /*
+@@ -61868,8 +61876,8 @@
+ struct SequenceState {
+   SequenceState(ProducerID, WriterID, ClientIdentity);
+   ~SequenceState();
+-  SequenceState(const SequenceState&) noexcept;
+-  SequenceState& operator=(const SequenceState&) noexcept;
++  SequenceState(const SequenceState&);
++  SequenceState& operator=(const SequenceState&);
+ 
+   ProducerID producer_id = 0;
+   WriterID writer_id = 0;
+@@ -62690,8 +62698,8 @@
+       client_identity(c),
+       chunks(/*initial_capacity=*/64) {}
+ SequenceState::~SequenceState() = default;
+-SequenceState::SequenceState(const SequenceState&) noexcept = default;
+-SequenceState& SequenceState::operator=(const SequenceState&) noexcept =
++SequenceState::SequenceState(const SequenceState&) = default;
++SequenceState& SequenceState::operator=(const SequenceState&) =
+     default;
+ 
+ // +---------------------------------------------------------------------------+
