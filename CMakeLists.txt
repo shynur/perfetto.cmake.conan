@@ -82,6 +82,20 @@ check_source_compiles(CXX
     HAS_CXX_FROM_CHARS
 )
 
+# perfetto v54+ 的 protovm 模块用到 std::launder (C++17, <new>), 但旧标准库
+# (如 Clang 6 配套的旧 libstdc++) 不提供它.  独立检测, 缺失时由 polyfill/new 补齐.
+check_source_compiles(CXX
+    [[
+        #include <new>
+
+        int main() {
+            int x = 0;
+            return std::launder(&x) == nullptr;
+        }
+    ]]
+    HAS_CXX_LAUNDER
+)
+
 #---------------- dependencies ----------------
 find_package(Threads)
 
@@ -111,12 +125,22 @@ target_sources(perfetto
 if(NOT HAS_CXX_FROM_CHARS)
     target_sources(perfetto
         PRIVATE
-            FILE_SET shynur_polyfill_headers
+            FILE_SET shynur_polyfill_charconv
             TYPE HEADERS
             BASE_DIRS polyfill
             FILES
                 polyfill/charconv
                 polyfill/shynur-polyfill.hpp
+    )
+endif()
+if(NOT HAS_CXX_LAUNDER)
+    target_sources(perfetto
+        PRIVATE
+            FILE_SET shynur_polyfill_new
+            TYPE HEADERS
+            BASE_DIRS polyfill
+            FILES
+                polyfill/new
     )
 endif()
 target_link_libraries(perfetto

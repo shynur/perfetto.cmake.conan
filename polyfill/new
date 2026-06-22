@@ -1,0 +1,38 @@
+// shynur polyfill: 旧标准库 (如 Clang 6 配套的旧 libstdc++) 的 <new> 缺少
+// C++17 的 std::launder (该特性 GCC 7 / libstdc++ 才引入).  perfetto v54
+// 新增的 protovm 模块用到了 std::launder, 导致旧编译器编译失败:
+//     error: no member named 'launder' in namespace 'std'
+//
+// 本文件经由 polyfill 目录被加入 perfetto target 的头文件搜索路径 (目录级 -I),
+// 使 perfetto.cc 中的 `#include <new>` 优先命中此处; 我们先 #include_next 取到
+// 系统真正的 <new>, 再在标准库确实缺失 std::launder 时用编译器内建补齐.
+//
+// 当标准库已提供 std::launder (现代编译器) 时, __cpp_lib_launder 已定义, 下面
+// 的注入整体跳过 -> 此文件对正常编译器无副作用 (no-op).
+//
+// 注: 向 namespace std 添加声明严格说是未定义行为, 与本仓 from_chars polyfill
+// 采取的做法一致, 对固定/受控的工具链可接受.
+
+#include_next <new>
+
+// 防御性检查: 确认 include_next 确实拉到了系统 <new> (否则 include 顺序有误,
+// 应让其显式报错而非静默失效).  涵盖 libstdc++ / libc++ 的 include guard.
+#if !defined(_NEW) && !defined(_LIBCPP_NEW) && !defined(__NEW__)
+#  error "polyfill/new: system <new> was not pulled in by #include_next; check header search order"
+#endif
+
+#if !defined(__cpp_lib_launder) && !defined(SHYNUR_POLYFILL_LAUNDER_DEFINED)
+#define SHYNUR_POLYFILL_LAUNDER_DEFINED
+namespace std {
+#  if defined(__has_builtin) && __has_builtin(__builtin_launder)
+    // __builtin_launder 自 Clang 6.0 / GCC 7 起可用, 是 std::launder 的正确底层实现.
+    template<typename T>
+    [[nodiscard]] T* launder(T* p) noexcept { return __builtin_launder(p); }
+#  else
+    // 极旧编译器既无 std::launder 又无 __builtin_launder 时的退路: 直接返回原指针.
+    // 语义上不完全等价 (不保证别名屏障), 但能编过且在多数实现上恰好工作.
+    template<typename T>
+    [[nodiscard]] T* launder(T* p) noexcept { return p; }
+#  endif
+}
+#endif
