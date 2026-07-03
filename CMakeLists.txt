@@ -118,10 +118,19 @@ check_source_compiles(CXX
 find_package(Threads)
 
 #---------------- patch -----------------
+# 补丁按顺序叠加到同一份 perfetto.patched.cc 上:
+#   1. perfetto.cc.patch — 基线补丁 (weak tr_expand_tag / SequenceState 拷贝语义等),
+#      用 -o 从原始 SDK 生成中间产物 perfetto.patched.cc.
+#   2. ipc-desect.patch  — 同事提供的 IPC CommitData 拆分修复 (上游 issue 6426),
+#      在上一步产物上就地 (in-place) 追加; 两个补丁改动区域互不重叠.
+# 因第 1 步每次都用 -o 从源码重新生成, 整条命令可安全重复执行.
 add_custom_command(
     OUTPUT perfetto.patched.cc
     COMMAND patch -i ${PROJECT_SOURCE_DIR}/patches/perfetto.cc.patch -d ${PROJECT_SOURCE_DIR} -p0 -o ${CMAKE_CURRENT_BINARY_DIR}/perfetto.patched.cc
-    DEPENDS patches/perfetto.cc.patch ${PERFETTO_SDK_DIR}/perfetto.cc
+    # --no-backup-if-mismatch: 就地打补丁时 hunk 出现行偏移 (基线补丁改变了后续行号)
+    # 会让 GNU patch 默认留下 .orig 备份, 污染构建目录, 故显式关闭.
+    COMMAND patch --no-backup-if-mismatch -p0 -i ${PROJECT_SOURCE_DIR}/patches/ipc-desect.patch ${CMAKE_CURRENT_BINARY_DIR}/perfetto.patched.cc
+    DEPENDS patches/perfetto.cc.patch patches/ipc-desect.patch ${PERFETTO_SDK_DIR}/perfetto.cc
     VERBATIM
 )
 
